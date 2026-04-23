@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "benchmark-light"
+version = "0.1.0"
+description = "Light dependency benchmark"
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+pydantic = "^2.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

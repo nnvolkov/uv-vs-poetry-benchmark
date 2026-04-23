@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "benchmark-medium"
+version = "0.1.0"
+description = "Medium dependency benchmark"
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+pydantic = "^2.0.0"
+numpy = "^1.26.0"
+pandas = "^2.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
