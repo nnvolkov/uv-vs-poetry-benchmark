@@ -20,8 +20,8 @@ EXPERIMENTS = [
     },
     {
         "name": "heavy",
-        "packages": "requests, pydantic, numpy, pandas, matplotlib, scikit-learn, transformers, datasets, accelerate",
-        "package_count": 9,
+        "packages": "requests, pydantic, numpy, pandas, matplotlib, scikit-learn",
+        "package_count": 6,
     },
 ]
 
@@ -33,7 +33,9 @@ def run_command(cmd: list[str]) -> subprocess.CompletedProcess:
 
 
 def get_image_size_mb(image_name: str) -> float:
-    result = run_command(["docker", "image", "inspect", image_name, "--format", "{{.Size}}"])
+    result = run_command(
+        ["docker", "image", "inspect", image_name, "--format", "{{.Size}}"]
+    )
     if result.returncode != 0 or not result.stdout.strip():
         return 0.0
     return int(result.stdout.strip()) / (1024 * 1024)
@@ -51,7 +53,15 @@ def build_image(tool: str, experiment: str) -> dict:
 
     start = time.perf_counter()
     result = run_command(
-        ["docker", "build", "--no-cache", "--progress=plain", "-t", image_name, str(context_path)]
+        [
+            "docker",
+            "build",
+            "--no-cache",
+            "--progress=plain",
+            "-t",
+            image_name,
+            str(context_path),
+        ]
     )
     duration = time.perf_counter() - start
 
@@ -101,10 +111,14 @@ def main():
                 mlflow.log_metric("image_size_mb", build_result["size_mb"])
                 mlflow.log_metric("success", int(build_result["success"]))
 
-                all_results.append({"tool": tool, "experiment": exp["name"], **build_result})
+                all_results.append(
+                    {"tool": tool, "experiment": exp["name"], **build_result}
+                )
 
                 status = "OK" if build_result["success"] else "FAILED"
-                print(f"    time={build_result['duration']:.2f}s  size={build_result['size_mb']:.1f}MB  [{status}]")
+                print(
+                    f"    time={build_result['duration']:.2f}s  size={build_result['size_mb']:.1f}MB  [{status}]"
+                )
 
         print()
 
@@ -113,7 +127,9 @@ def main():
     print("-" * 62)
     for r in all_results:
         status = "OK" if r["success"] else "FAILED"
-        print(f"{r['experiment']:<12} {r['tool']:<10} {r['duration']:<12.2f} {r['size_mb']:<12.1f} {status}")
+        print(
+            f"{r['experiment']:<12} {r['tool']:<10} {r['duration']:<12.2f} {r['size_mb']:<12.1f} {status}"
+        )
 
     print()
     print("View results: mlflow ui  → http://localhost:5000")

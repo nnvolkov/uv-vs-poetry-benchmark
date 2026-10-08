@@ -3,3 +3,5 @@ __pycache__/
 .venv/
 mlruns/
 experiments/**/poetry/.venv/
+*venv
+*DS_Store
